@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Assistant Advanced - Google Gemini</title>
+    <link rel="stylesheet" href="style-advanced.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>💬 Conversations</h2>
+                <button id="newChatBtn" class="new-chat-btn">+ New Chat</button>
+            </div>
+            <div class="conversations-list" id="conversationsList"></div>
+        </div>
+
+        <div class="main-chat">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title">
+                    <h1>🤖 AI Assistant</h1>
+                    <span class="model-badge">Gemini Pro</span>
+                </div>
+                <div class="header-actions">
+                    <button id="settingsBtn" class="icon-btn" title="Settings">⚙️</button>
+                    <button id="exportBtn" class="icon-btn" title="Export">📥</button>
+                    <button id="darkModeBtn" class="icon-btn" title="Dark/Light">🌙</button>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message welcome">
+                    <div class="message-content">
+                        <h3>Selamat Datang! 👋</h3>
+                        <p>Mulai percakapan baru atau pilih dari chat history di sidebar.</p>
+                        <div class="quick-commands">
+                            <button class="quick-btn" onclick="quickCommand('Jelaskan Python untuk pemula')">📚 Python Basics</button>
+                            <button class="quick-btn" onclick="quickCommand('Buatkan function untuk sorting array')">💻 Code Help</button>
+                            <button class="quick-btn" onclick="quickCommand('Tips productivity harian')">🚀 Productivity</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="api-setup" id="apiSetup">
+                    <input type="password" id="apiKeyInput" placeholder="Google API Key...">
+                    <button id="setupBtn" class="setup-btn">🔑 Start</button>
+                    <a href="https://makersuite.google.com/app/apikey" target="_blank" class="api-link">Get API Key</a>
+                </div>
+
+                <div class="chat-input" id="chatInput" style="display: none;">
+                    <textarea id="userInput" placeholder="Ketik pesan... (Shift+Enter untuk newline)"></textarea>
+                    <button id="sendBtn" class="send-btn">📤 Send</button>
+                </div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <span id="connectionStatus">Offline</span>
+                <span id="tokenCount">Tokens: 0</span>
+                <span id="responseTime">Response: --ms</span>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settingsModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>⚙️ Settings</h2>
+                    <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-item">
+                        <label>Temperature (Kreativitas)</label>
+                        <div class="slider-wrapper">
+                            <input type="range" id="temperatureSlider" min="0" max="100" value="70">
+                            <span id="tempValue">0.7</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <label>Max Tokens</label>
+                        <input type="number" id="maxTokens" value="2048">
+                    </div>
+
+                    <div class="setting-item">
+                        <label>System Prompt</label>
+                        <textarea id="systemPrompt" placeholder="Berikan instruksi khusus untuk AI..."></textarea>
+                    </div>
+
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="autoSave" checked>
+                            Auto Save Conversations
+                        </label>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="saveSettingsBtn" class="btn-primary">💾 Save Settings</button>
+                        <button onclick="closeModal('settingsModal')" class="btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script async src="https://cdn.jsdelivr.net/npm/@google/generative-ai@latest"></script>
+    <script src="advanced.js"></script>
+    
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 15px; font-size: 11px; color: rgba(255,255,255,0.5); border-top: 1px solid #333;">
+        <p>&copy; 2026 Muhammad Dani Sahputra. All rights reserved.</p>
+    </footer>
+</body>
+</html>

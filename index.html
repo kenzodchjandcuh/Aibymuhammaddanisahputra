@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Assistant - Google Gemini</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="chat-container">
+            <!-- Header -->
+            <div class="header">
+                <h1>🤖 AI Assistant</h1>
+                <p>Powered by Google Gemini</p>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="message welcome">
+                    <div class="message-content">
+                        <h3>Selamat Datang! 👋</h3>
+                        <p>Saya siap membantu menjawab pertanyaan Anda. Silakan ketik pertanyaan di bawah ini.</p>
+                        <p style="font-size: 12px; color: #999; margin-top: 10px;">
+                            💡 Tip: Anda bisa bertanya tentang apa saja - coding, writing, brainstorming, dll
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="api-key-section" id="apiKeySection">
+                    <input 
+                        type="password" 
+                        id="apiKeyInput" 
+                        placeholder="Masukkan Google API Key..." 
+                        class="api-key-input"
+                    >
+                    <button id="setupBtn" class="setup-btn">🔑 Setup</button>
+                    <p class="api-help">
+                        🔗 Dapatkan API key gratis: <a href="https://makersuite.google.com/app/apikey" target="_blank">makersuite.google.com</a>
+                    </p>
+                </div>
+
+                <div class="query-input-section" id="querySection" style="display: none;">
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="userInput" 
+                            placeholder="Ketik pertanyaan Anda..." 
+                            class="user-input"
+                        >
+                        <button id="sendBtn" class="send-btn">✈️ Kirim</button>
+                    </div>
+                    <button id="clearBtn" class="clear-btn">🗑️ Hapus Chat</button>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <span>AI sedang berpikir...</span>
+            </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <h3>ℹ️ Informasi</h3>
+            <div class="info-content">
+                <p><strong>Status:</strong> <span id="status">Menunggu Setup</span></p>
+                <p><strong>Messages:</strong> <span id="messageCount">0</span></p>
+                <p><strong>Model:</strong> Gemini Pro</p>
+                <div class="features">
+                    <h4>Features:</h4>
+                    <ul>
+                        <li>✅ Real-time chat</li>
+                        <li>✅ Gratis unlimited</li>
+                        <li>✅ Local storage</li>
+                        <li>✅ Responsive design</li>
+                        <li>✅ Dark mode ready</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@google/generative-ai"></script>
+    <script src="app.js"></script>
+    
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 20px; font-size: 12px; color: rgba(255,255,255,0.5); border-top: 1px solid #333; margin-top: 20px;">
+        <p>&copy; 2026 Muhammad Dani Sahputra. All rights reserved.</p>
+        <p>Powered by Google Generative AI (Gemini)</p>
+    </footer>
+</body>
+</html>

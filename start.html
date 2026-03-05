@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Assistant - Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            color: #eee;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .versions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .version-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .version-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .version-card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .version-card .type {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .version-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .features li {
+            padding: 8px 0;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .features li:before {
+            content: "✅ ";
+            color: #2ecc71;
+            margin-right: 8px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .comparison {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .comparison h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        .comparison-table th {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .check {
+            color: #2ecc71;
+        }
+
+        .cross {
+            color: #e74c3c;
+        }
+
+        .info-box {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .versions {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                font-size: 14px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🤖 AI Assistant Hub</h1>
+            <p>Pilih versi yang paling sesuai untuk Anda</p>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <h3>💡 Informasi Penting</h3>
+            <p>⚠️ Sebelum menggunakan aplikasi, dapatkan API Key gratis dari: <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color: #667eea; text-decoration: none;">makersuite.google.com</a></p>
+        </div>
+
+        <!-- Version Selection -->
+        <div class="versions">
+            <!-- Web Version Dasar -->
+            <div class="version-card">
+                <div class="type">🌐 WEB - SIMPLE</div>
+                <h2>Versi Web Dasar</h2>
+                <p>Interface chat yang sederhana namun powerful. Cocok untuk pemula yang ingin langsung membuka dan pakai.</p>
+                
+                <ul class="features">
+                    <li>Chat interaktif real-time</li>
+                    <li>Interface yang clean</li>
+                    <li>Tidak perlu install apapun</li>
+                    <li>Responsive design</li>
+                    <li>Gratis unlimited</li>
+                </ul>
+
+                <div class="btn-group">
+                    <a href="index.html" class="btn btn-primary">🚀 Buka Sekarang</a>
+                    <a href="WEB_GUIDE.md" class="btn btn-secondary">📖 Guide</a>
+                </div>
+            </div>
+
+            <!-- Web Version Advanced -->
+            <div class="version-card">
+                <div class="type">🌐 WEB - ADVANCED</div>
+                <h2>Versi Web Advanced</h2>
+                <p>Versi lengkap dengan conversation history, settings panel, dan banyak fitur canggih lainnya.</p>
+                
+                <ul class="features">
+                    <li>Conversation history</li>
+                    <li>Custom settings</li>
+                    <li>Export conversations</li>
+                    <li>Multiple chats</li>
+                    <li>Dark mode ready</li>
+                </ul>
+
+                <div class="btn-group">
+                    <a href="advanced.html" class="btn btn-primary">🚀 Buka Sekarang</a>
+                    <a href="WEB_GUIDE.md" class="btn btn-secondary">📖 Guide</a>
+                </div>
+            </div>
+
+            <!-- Python Version -->
+            <div class="version-card">
+                <div class="type">🐍 PYTHON - CLI</div>
+                <h2>Versi Python</h2>
+                <p>Command-line interface yang powerful untuk mereka yang suka bekerja dengan terminal/command prompt.</p>
+                
+                <ul class="features">
+                    <li>Chat di terminal</li>
+                    <li>History management</li>
+                    <li>Specialized utilities</li>
+                    <li>Script automation</li>
+                    <li>Advanced features</li>
+                </ul>
+
+                <div class="btn-group">
+                    <a href="GUIDE.md" class="btn btn-primary">📖 Setup Guide</a>
+                    <a href="https://python.org" target="_blank" class="btn btn-secondary">Python.org</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="comparison">
+            <h2>📊 Perbandingan Fitur</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Fitur</th>
+                        <th>Web Simple</th>
+                        <th>Web Advanced</th>
+                        <th>Python</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Chat Interaktif</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Tidak perlu install</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Conversation History</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Custom Settings</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Export Data</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>GUI Interface</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile Friendly</td>
+                        <td class="check">✓</td>
+                        <td class="check">✓</td>
+                        <td class="cross">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Command Line</td>
+                        <td class="cross">✗</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Scripting</td>
+                        <td class="cross">✗</td>
+                        <td class="cross">✗</td>
+                        <td class="check">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Quick Start Section -->
+        <div class="comparison">
+            <h2>⚡ Quick Start</h2>
+            
+            <h3 style="color: #667eea; margin: 20px 0 10px 0;">1️⃣ Dapatkan API Key</h3>
+            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;">
+                Kunjungi <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color: #667eea;">makersuite.google.com/app/apikey</a> dan klik "Create API Key". Gratis!
+            </p>
+
+            <h3 style="color: #667eea; margin: 20px 0 10px 0;">2️⃣ Pilih Versi</h3>
+            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 10px;">
+                <strong>Untuk pemula atau yang ingin instan:</strong> Gunakan Web Simple (index.html)<br>
+                <strong>Untuk fitur lengkap:</strong> Gunakan Web Advanced (advanced.html)<br>
+                <strong>Untuk terminal/automation:</strong> Gunakan Python version
+            </p>
+
+            <h3 style="color: #667eea; margin: 20px 0 10px 0;">3️⃣ Setup & Go!</h3>
+            <p style="color: rgba(255, 255, 255, 0.7);">
+                Ikuti guide di masing-masing versi. Semuanya user-friendly dan siap pakai!
+            </p>
+        </div>
+
+        <!-- Contact/Support -->
+        <div style="text-align: center; margin-top: 40px; padding-top: 40px; border-top: 1px solid #333;">
+            <p style="color: rgba(255, 255, 255, 0.6);">
+                🌟 Dibuat dengan ❤️ menggunakan Google Generative AI (Gemini) 🌟
+            </p>
+            <p style="font-size: 12px; color: rgba(255, 255, 255, 0.4); margin-top: 10px;">
+                Untuk bantuan lebih lanjut, baca dokumentasi di setiap folder versi.
+            </p>
+        </div>
+        
+        <!-- Copyright Footer -->
+        <div style="text-align: center; padding: 20px; margin-top: 40px; border-top: 1px solid #333; color: rgba(255, 255, 255, 0.4); font-size: 12px;">
+            <p>&copy; 2026 Muhammad Dani Sahputra. All rights reserved.</p>
+            <p style="margin-top: 5px; font-size: 11px;">Powered by Google Generative AI</p>
+        </div>
+    </div>
+</body>
+</html>
