@@ -110,7 +110,20 @@ ai/
     └── WEB_GUIDE.md            # 🌐 Web version guide
 ```
 
-## 🔧 Konfigurasi API Key
+## � Lisensi
+
+Aplikasi ini dilisensikan di bawah **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)**.
+
+<p>
+  <a href="https://kenzodchjandcuh.github.io/Aibymuhammaddanisahputra/">Aplikasi ai</a> © 2026 by 
+  <a href="https://github.com/kenzodchjandcuh">muhammad dani sahputra</a> is licensed under 
+  <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+  <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
+  <img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
+  <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="" style="max-width: 1em;max-height:1em;margin-left: .2em;">
+</p>
+
+## �🔧 Konfigurasi API Key
 
 ### Metode 1: File .env (Recommended)
 ```bash
