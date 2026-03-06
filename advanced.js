@@ -330,6 +330,227 @@ function toggleDarkMode() {
     document.body.style.filter = document.body.style.filter === 'invert(1)' ? '' : 'invert(1)';
 }
 
+// ===== Content Cleaner Module =====
+const ContentCleaner = {
+    // Mapping bahasa programming dengan keywords
+    languageKeywords: {
+        'python': ['def', 'class', 'import', 'from', 'if __name__', 'self', 'elif', 'except', 'async', 'await'],
+        'javascript': ['function', 'const', 'let', 'var', 'async', 'await', 'require', 'module.exports', 'class', '=>'],
+        'java': ['public class', 'private', 'public', 'static', 'import', 'package', 'interface', 'extends'],
+        'cpp': ['#include', 'using namespace', 'cout', 'cin', 'vector', 'template'],
+        'csharp': ['using', 'public class', 'namespace', 'async', 'await', 'LINQ'],
+        'html': ['<!DOCTYPE', '<html', '<head', '<body', '<div', '<span', '<p>'],
+        'css': ['@media', '.class', '#id', 'background', 'color', 'font-size', 'margin'],
+        'sql': ['SELECT', 'FROM', 'WHERE', 'JOIN', 'GROUP BY', 'ORDER BY', 'INSERT', 'UPDATE'],
+        'bash': ['#!/bin/bash', 'echo', 'grep', 'sed', 'awk', 'for', 'while'],
+    },
+
+    /**
+     * Bersihkan teks dengan menghilangkan whitespace berlebih
+     * @param {string} text - Teks yang akan dibersihkan
+     * @returns {string} Teks yang sudah dibersihkan
+     */
+    cleanText(text) {
+        if (typeof text !== 'string') return '';
+
+        // Hapus leading/trailing whitespace
+        text = text.trim();
+
+        // Hapus multiple spaces menjadi single space
+        text = text.replace(/\s+/g, ' ');
+
+        // Hapus multiple newlines (lebih dari 2 baris kosong)
+        while (text.includes('\n\n\n')) {
+            text = text.replace(/\n\n\n/g, '\n\n');
+        }
+
+        return text;
+    },
+
+    /**
+     * Deteksi bahasa programming dari kode
+     * @param {string} code - Potongan kode
+     * @returns {string} Nama bahasa yang terdeteksi
+     */
+    detectLanguage(code) {
+        const codeLower = code.toLowerCase();
+        const scores = {};
+
+        for (const [lang, keywords] of Object.entries(this.languageKeywords)) {
+            let score = 0;
+            for (const kw of keywords) {
+                if (codeLower.includes(kw.toLowerCase())) {
+                    score++;
+                }
+            }
+            scores[lang] = score;
+        }
+
+        const detected = Object.keys(scores).reduce((a, b) => 
+            scores[a] > scores[b] ? a : b
+        );
+
+        return scores[detected] > 0 ? detected : 'unknown';
+    },
+
+    /**
+     * Bersihkan kode dengan hapus markdown backticks dan fix indentasi
+     * @param {string} code - Kode yang akan dibersihkan
+     * @param {boolean} autoDetect - Deteksi bahasa otomatis
+     * @returns {object} Object dengan kode yang dibersihkan dan metadata
+     */
+    cleanCode(code, autoDetect = true) {
+        if (typeof code !== 'string') {
+            return {
+                cleaned_code: '',
+                language: 'unknown',
+                indentation_type: 'unknown',
+                has_syntax_issues: false
+            };
+        }
+
+        let cleaned = code.trim();
+        let language = 'unknown';
+        let indentation_type = 'unknown';
+
+        // Step 1: Hapus markdown backticks
+        const markdownPatterns = [
+            /^```[\w]*\n/,  // Opening backticks with optional language
+            /\n```$/,       // Closing backticks
+            /^```/,         // Single backticks at start
+            /```$/,         // Single backticks at end
+        ];
+
+        for (const pattern of markdownPatterns) {
+            cleaned = cleaned.replace(pattern, '');
+        }
+
+        cleaned = cleaned.trim();
+
+        // Step 2: Deteksi bahasa
+        if (autoDetect) {
+            language = this.detectLanguage(cleaned);
+        }
+
+        // Step 3: Analisis indentasi
+        const lines = cleaned.split('\n');
+        let hasTabs = false;
+        let hasSpaces = false;
+
+        for (const line of lines) {
+            if (line[0] === '\t') hasTabs = true;
+            if (line[0] === ' ') hasSpaces = true;
+        }
+
+        if (hasTabs) {
+            indentation_type = 'tabs';
+        } else if (hasSpaces) {
+            indentation_type = 'spaces';
+        } else {
+            indentation_type = 'none';
+        }
+
+        // Step 4: Normalisasi indentasi (tabs to spaces)
+        if (indentation_type === 'tabs') {
+            cleaned = cleaned.replace(/\t/g, '    ');
+            indentation_type = 'spaces (fixed)';
+        }
+
+        // Step 5: Hapus trailing whitespace di setiap baris
+        cleaned = lines
+            .map(line => line.trimEnd())
+            .join('\n');
+
+        // Step 6: Hapus multiple empty lines
+        while (cleaned.includes('\n\n\n')) {
+            cleaned = cleaned.replace(/\n\n\n/g, '\n\n');
+        }
+
+        // Step 7: Cek syntax issues (basic check)
+        const unclosedBrackets = cleaned.split('{').length - cleaned.split('}').length;
+        const unclosedParens = cleaned.split('(').length - cleaned.split(')').length;
+        const unclosedSquares = cleaned.split('[').length - cleaned.split(']').length;
+
+        const hasSyntaxIssues = unclosedBrackets !== 0 || unclosedParens !== 0 || unclosedSquares !== 0;
+
+        return {
+            cleaned_code: cleaned,
+            language: language,
+            indentation_type: indentation_type,
+            has_syntax_issues: hasSyntaxIssues,
+            syntax_warnings: hasSyntaxIssues ? {
+                unclosed_brackets: unclosedBrackets,
+                unclosed_parens: unclosedParens,
+                unclosed_squares: unclosedSquares,
+            } : null
+        };
+    },
+
+    /**
+     * Bersihkan response lengkap dari AI (mixing teks dan kode)
+     * @param {string} responseText - Response dari AI
+     * @param {boolean} extractCode - Extract hanya bagian kode
+     * @returns {object} Object dengan teks dan code blocks yang dibersihkan
+     */
+    cleanAIResponse(responseText, extractCode = false) {
+        if (typeof responseText !== 'string') {
+            return { text: '', code_blocks: [], has_code: false };
+        }
+
+        // Deteksi code blocks
+        const codeBlockPattern = /```[\w]*\n([\s\S]*?)\n```/g;
+        const codeBlocks = [];
+        let match;
+
+        while ((match = codeBlockPattern.exec(responseText)) !== null) {
+            codeBlocks.push(match[1]);
+        }
+
+        // Extract dan clean setiap code block
+        const cleanedCodeBlocks = codeBlocks.map(code => this.cleanCode(code));
+
+        // Hapus code blocks dari teks
+        let textWithoutCode = responseText.replace(/```[\w]*\n[\s\S]*?\n```/g, '\n');
+        const cleanedText = this.cleanText(textWithoutCode);
+
+        return {
+            text: cleanedText,
+            code_blocks: cleanedCodeBlocks,
+            has_code: codeBlocks.length > 0
+        };
+    },
+
+    /**
+     * Format kode untuk display dengan syntax highlighting hints
+     * @param {string} code - Kode yang akan diformat
+     * @returns {object} Object dengan formatted code dan language info
+     */
+    formatCodeForDisplay(code) {
+        const result = this.cleanCode(code);
+        return {
+            ...result,
+            formatted_html: `<pre><code class="language-${result.language}">${this.escapeHtml(result.cleaned_code)}</code></pre>`,
+            language_display: result.language === 'unknown' ? '📝 Code' : `📝 ${result.language.toUpperCase()}`
+        };
+    },
+
+    /**
+     * Escape HTML untuk keamanan
+     * @param {string} text - Text yang akan di-escape
+     * @returns {string} Text yang sudah di-escape
+     */
+    escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+    }
+};
+
 // ===== Initialization =====
 function init() {
     const savedApiKey = localStorage.getItem('gemini_api_key');

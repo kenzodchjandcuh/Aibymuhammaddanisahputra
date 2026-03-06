@@ -1,0 +1,328 @@
+❌ TROUBLESHOOTING GUIDE - API Setup Error
+
+═══════════════════════════════════════════════════════════════════════
+
+🔴 ERROR: "❌ Gagal setup: API Error:"
+
+═══════════════════════════════════════════════════════════════════════
+
+PENYEBAB UTAMA:
+─────────────────────────────────────────────────────────────────────
+
+1. ❌ API Key tidak valid / tidak ada
+2. ❌ API Key tidak di-paste dengan benar
+3. ❌ API Key expired atau suspended
+4. ❌ Network error / CORS issue
+5. ❌ Google Generative API belum di-enable
+
+═══════════════════════════════════════════════════════════════════════
+
+✅ SOLUSI STEP-BY-STEP
+
+═══════════════════════════════════════════════════════════════════════
+
+STEP 1: DAPATKAN API KEY
+─────────────────────────────────────────────────────────────────────
+
+CARA TERMUDAH (Google AI Studio):
+
+1. Buka: https://aistudio.google.com/app/apikey
+   
+2. Klik "Create API Key"
+
+3. Pilih opsi:
+   ✓ Create API Key in new Google Cloud project
+   atau
+   ✓ Create API Key in existing project
+
+4. COPY API Key yang muncul
+   Contoh: AIzaSyD_abc123def456ghi789jkl...
+
+5. Simpan di tempat aman (jangan share!)
+
+
+CARA FORMAL (Google Cloud Console):
+
+1. Buka: https://console.cloud.google.com/
+
+2. Create Project Baru:
+   - Click "Select a project" > "New project"
+   - Fill project name
+   - Click "Create"
+
+3. Enable API:
+   - Search "Generative Language API"
+   - Click "Enable"
+
+4. Create Credentials:
+   - Go to "Credentials"
+   - Click "Create Credentials" > "API Key"
+   - Copy key yang muncul
+
+5. Update di advanced.html atau .env
+
+═══════════════════════════════════════════════════════════════════════
+
+STEP 2: INPUT API KEY KE ADVANCED.HTML
+─────────────────────────────────────────────────────────────────────
+
+1. Buka advanced.html di browser:
+   
+   ✓ Langsung: http://localhost:port/advanced.html
+   ✓ atau File > Open > e:\gabutnyasaya.html\ai\advanced.html
+
+2. Anda akan lihat setup screen:
+
+   ┌─────────────────────────────────────────┐
+   │  🤖 AI Assistant Advanced               │
+   │     Google Gemini Pro                   │
+   │                                         │
+   │  API Key:                               │
+   │  ┌─────────────────────────────────┐   │
+   │  │ [PASTE APIKEY DI SINI]          │   │
+   │  └─────────────────────────────────┘   │
+   │                                         │
+   │              [Setup Button] ✓           │
+   │                                         │
+   └─────────────────────────────────────────┘
+
+3. Paste API key di input field:
+   
+   ✓ Ctrl+A (select all)
+   ✓ Ctrl+V (paste)
+   
+4. Klik "Setup" button
+
+5. Tunggu response:
+   
+   JIKA BERHASIL:
+   ✓ "🎉 Setup Berhasil!"
+   ✓ Chat interface appear
+   ✓ Status: "✅ Connected"
+   
+   JIKA GAGAL:
+   ✗ Error message muncul
+   → Follow langkah di bawah
+
+═══════════════════════════════════════════════════════════════════════
+
+STEP 3: DEBUGGING - JIKA MASIH ERROR
+─────────────────────────────────────────────────────────────────────
+
+BUKA DEVELOPER CONSOLE (F12):
+
+1. Tekan F12 di keyboard
+   
+2. Pergi ke tab "Console"
+
+3. Copy error message lengkapnya
+
+4. Check error type:
+
+   ERROR TYPE A: "API key not valid"
+   ─────────────────────────────────
+   Solusi:
+   - ✓ Cek API key (copas ulang dari aistudio.google.com)
+   - ✓ Pastikan tidak ada space di awal/akhir
+   - ✓ Verify di Google Cloud Console
+   
+   ERROR TYPE B: "ERR_CORS_MISSING_HEADER"
+   ─────────────────────────────────────────
+   Solusi:
+   - ✓ CORS error dari Google API
+   - ✓ Coba reload page (F5)
+   - ✓ Coba di browser lain
+   - ✓ Clear localStorage (Ctrl+Shift+Delete)
+   
+   ERROR TYPE C: "Failed to fetch"
+   ──────────────────────────────
+   Solusi:
+   - ✓ Check internet connection
+   - ✓ Firewall/proxy mungkin block
+   - ✓ Try VPN atau network lain
+   
+   ERROR TYPE D: "API not enabled"
+   ───────────────────────────────
+   Solusi:
+   - ✓ Go to Google Cloud Console
+   - ✓ Enable "Generative Language API"
+   - ✓ Wait 1-2 minutes
+   - ✓ Try again
+
+
+CONSOLE DEBUGGING COMMANDS:
+
+// Check API key stored
+> localStorage.getItem('gemini_api_key')
+Output: "AIzaSyD_..." atau null
+
+// Check connection status
+> document.getElementById('connectionStatus').textContent
+Output: Connection status
+
+// Manual API test
+> fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=YOUR_KEY', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: 'test' }] }]
+    })
+  }).then(r => r.json()).then(d => console.log(d))
+
+═══════════════════════════════════════════════════════════════════════
+
+STEP 4: VERIFY SETUP BERHASIL
+─────────────────────────────────────────────────────────────────────
+
+Setelah setup berhasil, Anda akan lihat:
+
+✓ Chat interface terbuka
+✓ Message input field visible
+✓ Status: "✅ Connected"
+✓ Test: Kirim pesan ke AI
+✓ AI response muncul
+
+═══════════════════════════════════════════════════════════════════════
+
+❓ COMMON QUESTIONS
+
+═══════════════════════════════════════════════════════════════════════
+
+Q1: API key saya berapa karakter?
+A: Minimal 30+ karakter, format: AIzaSy... (randomstring)
+   Jika kurang, mungkin belum dicopy sepenuhnya
+
+Q2: API key gratis atau bayar?
+A: Gratis untuk limited quota:
+   • First 60 requests/minute
+   • First 2,000 requests/day
+   Lebih banyak → Setup billing
+
+Q3: Berapa lama setup biasanya?
+A: Instant (< 1 detik)
+   Jika lebih lama → ada network issue
+
+Q4: Bisa pakai API key dari orang lain?
+A: Bisa, tapi:
+   ✗ Jangan share publicly
+   ✗ Quota terbagi
+   ✓ Better: Buat sendiri (gratis)
+
+Q5: Setup perlu dilakukan setiap kali?
+A: Tidak! Tersimpan di browser (localStorage)
+   Buka advanced.html lagi → langsung bisa chat
+
+Q6: Aman sim nyimpan API key di browser?
+A: Aman untuk:
+   ✓ Local/development
+   ✗ Jangan production
+   Untuk production → backend proxy
+
+═══════════════════════════════════════════════════════════════════════
+
+🛠️ MANUAL FIX - JIKA STEP DI ATAS TIDAK KERJA
+
+═══════════════════════════════════════════════════════════════════════
+
+OPTION 1: Set API Key di .env (Python backend)
+
+File: e:\gabutnyasaya.html\ai\.env
+
+Buka file dan ubah:
+─────────────────
+SEBELUM:
+GOOGLE_API_KEY=your_api_key_here
+
+SESUDAH:
+GOOGLE_API_KEY=AIzaSyD_1234567890abcdefghijklmnopqrs
+
+Simpan file
+
+Restart aplikasi
+
+─────────────────────────────────────────────────────────
+Note: Ini untuk Python backend saja, bukan JavaScript UI
+
+
+OPTION 2: Hardcode API Key di advanced.html (NOT RECOMMENDED)
+
+File: e:\gabutnyasaya.html\ai\advanced.js
+
+Find line ~45:
+    apiKey: null,
+
+Replace dengan:
+    apiKey: 'AIzaSyD_your_key_here',
+    isSetup: true,  // Set to true untuk skip setup screen
+
+Save & reload
+
+⚠️ WARNING: Jangan do ini di production!
+─────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════════════════
+
+📞 STILL NOT WORKING? DO THIS:
+
+═══════════════════════════════════════════════════════════════════════
+
+1. RESET EVERYTHING:
+   
+   - Tutup browser sepenuhnya
+   - Delete localStorage (settings sementara):
+     * Chrome: Ctrl+Shift+Delete
+     * Firefox: Ctrl+Shift+Delete
+     * Edge: Ctrl+Shift+Delete
+   - Clear browser cache
+   - Buka advanced.html lagi
+   - Input API key baru
+   - Setup ulang
+
+2. TEST DI TERMINAL:
+
+   cd e:\gabutnyasaya.html\ai
+   python -c "
+   from ai_utils import SpecializedAI
+   try:
+       ai = SpecializedAI()
+       print('✓ Python API setup OK')
+   except Exception as e:
+       print(f'✗ Error: {e}')
+   "
+
+3. VERIFY API KEY VALID:
+
+   Buka: https://aistudio.google.com/app
+   
+   Login dengan account yang membuat API key
+   
+   Jika tidak bisa akses → API key invalid/expired
+
+4. CONTACT SUPPORT:
+
+   If still error after all steps:
+   - Save error message lengkap (dari F12 console)
+   - Take screenshot
+   - Report ke Google Cloud Console
+
+═══════════════════════════════════════════════════════════════════════
+
+✨ QUICK CHECKLIST
+
+═══════════════════════════════════════════════════════════════════════
+
+Sebelum mulai, pastikan:
+
+□ Punya internet connection
+□ Punya Google account
+□ API key dari https://aistudio.google.com/app/apikey
+□ API key valid (30+ character)
+□ API key tidak expired
+□ Generative Language API enabled
+□ advanced.html dibuka di browser (bukan file editor)
+□ No VPN/firewall blocking Google API
+□ Browser updated ke versi terbaru
+
+Jika semua checked ✓ setup pasti berhasil!
+
+═══════════════════════════════════════════════════════════════════════
