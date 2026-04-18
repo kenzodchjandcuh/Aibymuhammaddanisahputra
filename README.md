@@ -11,9 +11,12 @@ Aplikasi AI canggih yang menggunakan **Google Generative AI (Gemini)** dengan du
 ### 🌐 Web Version (HTML/CSS/JS)
 - **Interface Modern**: UI yang user-friendly dengan styling yang menarik
 - **Real-time Chat**: Interaksi langsung dengan AI
+- **Upload File**: Dukungan lampiran foto, PDF, dan Word langsung dari browser
 - **Versi Dasar & Advanced**: Pilih sesuai kebutuhan
 - **No Installation Required**: Jalankan langsung di browser
 - **Responsive Design**: Kompatibel dengan desktop dan mobile
+
+Baru di versi web: pengguna dapat memilih file foto, PDF, atau dokumen Word dari tombol upload di samping tombol kirim. File akan ditambahkan sebagai konteks tambahan untuk membantu AI menjawab pertanyaan dengan lebih relevan.
 
 ### 🐍 Python Version (CLI)
 - **Terminal Interface**: Untuk pengguna yang suka command line

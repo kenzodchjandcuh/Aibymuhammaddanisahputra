@@ -44,6 +44,7 @@ Versi web dari aplikasi AI yang menggunakan **Google Generative AI (Gemini)** de
 
 ✅ Chat interaktif real-time  
 ✅ Interface yang clean dan modern  
+✅ Upload file: foto, PDF, dan Word  
 ✅ Dark mode theme  
 ✅ Responsive design  
 ✅ Local storage untuk API key  
@@ -53,7 +54,8 @@ Versi web dari aplikasi AI yang menggunakan **Google Generative AI (Gemini)** de
 1. Buka `index.html` di browser
 2. Masukkan API Key Google
 3. Klik "Setup"
-4. Mulai chat!
+4. Pilih file upload di samping tombol kirim untuk melampirkan dokumen atau foto
+5. Mulai chat!
 
 ## 🎯 Fitur Versi Advanced (advanced.html)
 

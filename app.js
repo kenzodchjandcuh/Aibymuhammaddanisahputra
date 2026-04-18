@@ -18,6 +18,8 @@ const elements = {
     apiKeyInput: document.getElementById('apiKeyInput'),
     setupBtn: document.getElementById('setupBtn'),
     userInput: document.getElementById('userInput'),
+    fileInput: document.getElementById('fileInput'),
+    filePreview: document.getElementById('filePreview'),
     sendBtn: document.getElementById('sendBtn'),
     clearBtn: document.getElementById('clearBtn'),
     chatMessages: document.getElementById('chatMessages'),
@@ -30,17 +32,71 @@ const elements = {
 
 // State
 let conversationHistory = [];
+let attachedFiles = [];
 
 // ===== Setup Functions =====
 elements.setupBtn.addEventListener('click', setupAPI);
 elements.sendBtn.addEventListener('click', sendMessage);
 elements.clearBtn.addEventListener('click', clearChat);
+elements.fileInput.addEventListener('change', handleFileSelection);
 elements.userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
     }
 });
+
+function handleFileSelection() {
+    attachedFiles = Array.from(elements.fileInput.files);
+    renderFilePreview();
+}
+
+function renderFilePreview() {
+    const preview = elements.filePreview;
+    preview.innerHTML = '';
+
+    if (!attachedFiles.length) {
+        preview.innerHTML = '<p class="file-preview-empty">Tidak ada file terpilih.</p>';
+        return;
+    }
+
+    attachedFiles.forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'file-item';
+
+        const icon = document.createElement('span');
+        icon.className = 'file-icon';
+        if (file.type.startsWith('image/')) {
+            icon.textContent = '🖼️';
+        } else if (file.type === 'application/pdf') {
+            icon.textContent = '📄';
+        } else {
+            icon.textContent = '📁';
+        }
+
+        const label = document.createElement('div');
+        label.className = 'file-label';
+        label.innerHTML = `
+            <strong>${file.name}</strong>
+            <span>${file.type || 'Unknown'} · ${Math.round(file.size / 1024)} KB</span>
+        `;
+
+        item.appendChild(icon);
+        item.appendChild(label);
+        preview.appendChild(item);
+    });
+}
+
+function getAttachmentDescription() {
+    if (!attachedFiles.length) return '';
+    return attachedFiles.map(file => `${file.name} (${file.type || 'file'}, ${Math.round(file.size / 1024)} KB)`).join(', ');
+}
+
+function clearFileSelection() {
+    attachedFiles = [];
+    elements.fileInput.value = '';
+    renderFilePreview();
+}
 
 async function setupAPI() {
     const apiKey = elements.apiKeyInput.value.trim();
@@ -92,8 +148,9 @@ async function setupAPI() {
 // ===== Chat Functions =====
 async function sendMessage() {
     const message = elements.userInput.value.trim();
+    const attachmentDescription = getAttachmentDescription();
 
-    if (!message) return;
+    if (!message && !attachmentDescription) return;
 
     if (!CONFIG.isSetup) {
         showError('⚠️ Silakan setup API Key terlebih dahulu');
@@ -101,20 +158,29 @@ async function sendMessage() {
     }
 
     // Add user message to UI
-    addMessage(message, 'user');
+    if (message) addMessage(message, 'user');
+    if (attachmentDescription) addMessage(`📎 Lampiran: ${attachmentDescription}`, 'user');
     elements.userInput.value = '';
 
     // Show loading
     elements.loading.style.display = 'flex';
 
     try {
+        const finalPrompt = attachmentDescription
+            ? `${message}
+
+[File terlampir: ${attachmentDescription}]
+
+Tolong gunakan informasi lampiran di atas saat menjawab.`
+            : message;
+
         // Send to AI via REST API
         const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + CONFIG.apiKey, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: message }]
+                    parts: [{ text: finalPrompt }]
                 }]
             })
         });
@@ -136,8 +202,16 @@ async function sendMessage() {
             ai: aiResponse,
         });
 
+        // Save to history
+        conversationHistory.push({
+            timestamp: new Date().toISOString(),
+            user: message || `[Lampiran: ${attachmentDescription}]`,
+            ai: aiResponse,
+        });
+
         // Update message count
         updateMessageCount();
+        clearFileSelection();
 
     } catch (error) {
         showError(`❌ Error: ${error.message}`);
@@ -190,6 +264,7 @@ function clearChat() {
                 </div>
             </div>
         `;
+        clearFileSelection();
         updateMessageCount();
     }
 }

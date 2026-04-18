@@ -63,7 +63,18 @@
                             placeholder="Ketik pertanyaan Anda..." 
                             class="user-input"
                         >
+                        <label for="fileInput" class="file-upload-btn">📎 Upload</label>
+                        <input
+                            type="file"
+                            id="fileInput"
+                            class="file-input"
+                            accept="image/*,.pdf,.doc,.docx"
+                            multiple
+                        >
                         <button id="sendBtn" class="send-btn">✈️ Kirim</button>
+                    </div>
+                    <div class="file-preview" id="filePreview">
+                        <p class="file-preview-empty">Tidak ada file terpilih.</p>
                     </div>
                     <button id="clearBtn" class="clear-btn">🗑️ Hapus Chat</button>
                 </div>
@@ -87,10 +98,10 @@
                     <h4>Features:</h4>
                     <ul>
                         <li>✅ Real-time chat</li>
+                        <li>✅ Upload foto, PDF, dan Word</li>
                         <li>✅ Gratis unlimited</li>
                         <li>✅ Local storage</li>
                         <li>✅ Responsive design</li>
-                        <li>✅ Dark mode ready</li>
                     </ul>
                 </div>
             </div>
